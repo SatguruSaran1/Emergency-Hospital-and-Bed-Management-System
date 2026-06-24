@@ -112,10 +112,10 @@ The system enforces strict medical logic to ensure patients are assigned to the 
 
 | Patient Level | Allowed Doctors (Specialization) | Allowed Bed Types |
 | :--- | :--- | :--- |
-| **🔴 Critical** | `ICU`, `Emergency`, `Surgery`, `Cardiology`, `Neurology` | `ICU` only |
-| **🟠 High** | `Emergency`, `Surgery`, `Orthopedics`, `Cardiology`, `Neurology` | `Emergency`, `ICU` |
-| **🟡 Medium** | `General`, `Orthopedics`, `Pediatrics`, `ENT` | `General`, `Emergency` |
-| **🟢 Low** | `General`, `Dermatology`, `ENT`, `Pediatrics` | `General` |
+| ** Critical** | `ICU`, `Emergency`, `Surgery`, `Cardiology`, `Neurology` | `ICU` only |
+| ** High** | `Emergency`, `Surgery`, `Orthopedics`, `Cardiology`, `Neurology` | `Emergency`, `ICU` |
+| ** Medium** | `General`, `Orthopedics`, `Pediatrics`, `ENT` | `General`, `Emergency` |
+| ** Low** | `General`, `Dermatology`, `ENT`, `Pediatrics` | `General` |
 
 ### Key Logistics
 - **Bed to Ward Mapping**: Every `Bed` is linked to a `Ward` via `ward_id`. Wards have a `ward_type` (e.g., "ICU", "General") that usually matches the `bed_type`.
