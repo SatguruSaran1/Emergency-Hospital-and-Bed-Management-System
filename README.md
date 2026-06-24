@@ -19,11 +19,11 @@ Before you begin, ensure you have the following installed:
 ### 1. Download the Project
 Clone this repository to your local machine:
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
-cd YOUR_REPOSITORY_NAME
+git clone https://github.com/SatguruSaran1/Emergency-Hospital-and-Bed-Management-System.git
+cd Emergency-Hospital-and-Bed-Management-System
 ```
 
-### 2. Set Up a Virtual Environment (Recommended)
+### 2. Set Up a Virtual Environment
 ```bash
 python -m venv venv
 # On Windows
@@ -72,8 +72,12 @@ The system automatically generates accounts on startup:
 - **Password:** `admin1` (same as username)
 
 **Doctor Accounts:**
-- **Username:** `dr<name><id>` (e.g., for Dr. John Doe with ID 1, use `drjohndoe1`)
-- **Password:** `doctor_<id>` (e.g., `doctor_1`)
+The format is `dr<name><id>` for the username, and `doctor_<id>` for the password. 
+*(Examples from the default database dump):*
+- **Dr. Sharma** (Cardiology): Username: `drsharma201` | Password: `doctor_201`
+- **Dr. Mehta** (Neurology): Username: `drmehta202` | Password: `doctor_202`
+- **Dr. Singh** (Orthopedics): Username: `drsingh203` | Password: `doctor_203`
+- **Dr. Rao** (General): Username: `drrao204` | Password: `doctor_204`
 
 From the dashboard, admins can manage hospital inventory, admit/discharge patients, update bed statuses, and view real-time statistics. Doctors can view their active patients and manage their fatigue statuses.
 
