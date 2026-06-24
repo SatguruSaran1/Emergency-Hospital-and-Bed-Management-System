@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — EHRBMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css?v=5" />
+</head>
+<body class="login-body">
+  <div class="login-card-container">
+    <div class="login-card">
+      <div class="login-logo-top">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20,100 L20,20 L60,60 L100,20 L100,100" stroke="#0891b2" stroke-width="12" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M45,80 L75,80 M60,65 L60,95" stroke="#22d3ee" stroke-width="10" stroke-linecap="round"/>
+        </svg>
+        <h2>Medi<span>core</span></h2>
+      </div>
+
+      <div id="error-box" class="error-msg" style="display:none; background:rgba(239,68,68,0.1); color:#ef4444; padding:1rem; border-radius:16px; margin-bottom:1.5rem; font-weight:600; text-align:center;"></div>
+
+      <form id="login-form" class="login-form">
+        <h1>Welcome Back</h1>
+        <p>Sign in to your Medicore dashboard to manage hospital resources effectively.</p>
+
+        <div class="form-group">
+          <input type="text" id="username" required autocomplete="username" placeholder="Username" />
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" required autocomplete="current-password" placeholder="Password" />
+        </div>
+        
+        <div class="login-btn-wrap">
+          <button type="submit" class="login-btn">Sign In</button>
+          <a href="#" class="forgot-link">Trouble signing in?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const errorBox = document.getElementById('error-box');
+      errorBox.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+        
+        if (!res.ok) throw new Error(data.detail || 'Login failed');
+        
+        localStorage.setItem('ehrbms_token', data.token);
+        localStorage.setItem('ehrbms_user', data.username);
+        window.location.href = '/';
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
