@@ -122,10 +122,10 @@ MySQL CHECK, FOREIGN KEY, and ENUM constraints immediately reject invalid data:
 
 | Test Case | Constraint Violated | Result |
 |-----------|---------------------|--------|
-| Patient age = 200 | `chk_age_valid` (age BETWEEN 0 AND 120) | ❌ REJECTED |
-| Admission with non-existent doctor_id | `admission_ibfk_2` (FK → doctor) | ❌ REJECTED |
-| Setting inventory quantity = -5 | `chk_quantity_positive` (quantity ≥ 0) | ❌ REJECTED |
-| Discharge date before admission date | `chk_dates` (discharge ≥ admission) | ❌ REJECTED |
+| Patient age = 200 | `chk_age_valid` (age BETWEEN 0 AND 120) | REJECTED |
+| Admission with non-existent doctor_id | `admission_ibfk_2` (FK → doctor) |  REJECTED |
+| Setting inventory quantity = -5 | `chk_quantity_positive` (quantity ≥ 0) |  REJECTED |
+| Discharge date before admission date | `chk_dates` (discharge ≥ admission) |  REJECTED |
 
 **Effect:** No invalid data can enter the database, regardless of the application code.
 
@@ -197,7 +197,7 @@ These mechanisms together ensure that the database remains **consistent**, **con
 ## 6. Running the Demo
 
 ```bash
-# Ensure MySQL is running and the database is initialised
+# Ensure MySQL is running and the database is initialized
 python task6_transactions_demo.py
 ```
 
