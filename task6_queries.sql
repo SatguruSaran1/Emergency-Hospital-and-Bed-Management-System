@@ -1,11 +1,11 @@
--- ============================================================
+
 -- TASK 6: Database Transaction Demonstration - GUIDE
 -- Emergency Hospital Management System
--- ============================================================
+
 
 /*
    DOCUMENTATION / GUIDE:
-   ----------------------
+
    
    SCENARIO 1: Admission (Atomicity)
    - What is in DB now: Bed 9001 and Doctor 204 are 'Available'.
@@ -42,9 +42,9 @@
 */
 
 
--- ============================================================
+
 -- EXECUTABLE SQL CODE STARTS HERE
--- ============================================================
+
 
 USE emergency_hospital_db;
 
