@@ -15,17 +15,16 @@ import os
 import hashlib
 import secrets
 
-# ─────────────────────────────────────────────
+
 # App Initialization
-# ─────────────────────────────────────────────
+
 app = FastAPI(title="Emergency Hospital Management System", version="1.0.0")
 
 # In-memory session store: token -> username
 sessions: dict = {}
 
-# ─────────────────────────────────────────────
 # Database Configuration
-# ─────────────────────────────────────────────
+
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
@@ -39,9 +38,9 @@ def get_db():
     return mysql.connector.connect(**DB_CONFIG)
 
 
-# ─────────────────────────────────────────────
+
 # Password Hashing (SHA-256 + salt)
-# ─────────────────────────────────────────────
+
 def hash_password(password: str) -> str:
     """Hash a password with a random salt using SHA-256."""
     salt = secrets.token_hex(16)
@@ -57,9 +56,8 @@ def verify_password(password: str, stored: str) -> bool:
     return hashlib.sha256((salt + password).encode()).hexdigest() == hashed
 
 
-# ─────────────────────────────────────────────
 # Startup: Create users table & default admin
-# ─────────────────────────────────────────────
+
 @app.on_event("startup")
 def startup():
     conn = get_db()
@@ -108,7 +106,7 @@ def startup():
                 (username, ph, 'Doctor', doc_id)
             )
             
-    # --- DOCTOR FATIGUE ENGINE AUTOMATED SETUP ---
+    # DOCTOR FATIGUE ENGINE AUTOMATED SETUP 
     # 1. Schema Updates
     cursor.execute("ALTER TABLE doctor MODIFY COLUMN availability_status ENUM('Available','Busy','On Leave','Fatigued') DEFAULT 'Available'")
     try:
@@ -196,9 +194,9 @@ def execute_db(sql: str, params=None):
         cursor.close()
         conn.close()
 
-# ─────────────────────────────────────────────
+
 # Pydantic Models (Request Schemas)
-# ─────────────────────────────────────────────
+
 class PatientCreate(BaseModel):
     patient_id: int
     name: str
@@ -247,9 +245,9 @@ class LogoutRequest(BaseModel):
 class NotificationRead(BaseModel):
     is_read: bool = True
 
-# ─────────────────────────────────────────────
+
 # AUTH ROUTES
-# ─────────────────────────────────────────────
+
 
 @app.post("/api/login")
 def login(req: LoginRequest):
@@ -295,11 +293,10 @@ def get_current_user(authorization: Optional[str] = Header(None)):
     return None
 
 
-# ─────────────────────────────────────────────
 # ROUTES
-# ─────────────────────────────────────────────
 
-# ---------- Dashboard ----------
+
+# Dashboard
 @app.get("/api/dashboard")
 def get_dashboard(user: Optional[dict] = Depends(get_current_user)):
     """
@@ -388,7 +385,7 @@ def get_dashboard(user: Optional[dict] = Depends(get_current_user)):
     }
 
 
-# ---------- Hospitals ----------
+#  Hospitals 
 @app.get("/api/hospitals")
 def get_hospitals():
     """Get all hospitals with ward and bed counts."""
@@ -410,7 +407,7 @@ def get_hospitals():
     return query_db(sql)
 
 
-# ---------- Patients ----------
+#  Patients
 @app.get("/api/patients")
 def get_patients(user: Optional[dict] = Depends(get_current_user)):
     """
@@ -496,7 +493,7 @@ def get_patient(patient_id: int):
     return {"patient": patient[0], "admission_history": history}
 
 
-# ---------- Doctors ----------
+#  Doctors 
 @app.get("/api/doctors")
 def get_doctors():
     """Get all doctors with their active patient count."""
@@ -548,7 +545,7 @@ def update_doctor_status(doctor_id: int, body: DoctorStatusUpdate):
     return {"message": f"Doctor status updated to {body.availability_status}"}
 
 
-# ---------- Beds ----------
+# Beds 
 @app.get("/api/beds")
 def get_beds():
     """
@@ -625,7 +622,7 @@ def update_bed_status(bed_id: int, body: BedStatusUpdate):
     return {"message": "Bed status updated"}
 
 
-# ---------- Admissions ----------
+# Admissions
 @app.get("/api/admissions")
 def get_admissions(user: Optional[dict] = Depends(get_current_user)):
     """
@@ -797,7 +794,7 @@ def discharge_patient(admission_id: int, body: DischargeRequest):
     return {"message": "Patient discharged. Bed freed and doctor status updated by trigger."}
 
 
-# ---------- Inventory ----------
+# Inventory
 @app.get("/api/inventory")
 def get_inventory():
     """
@@ -901,7 +898,7 @@ def create_inventory_item(item: InventoryCreate):
     return {"message": "New inventory item registered successfully."}
 
 
-# ---------- Wards ----------
+#  Wards 
 @app.get("/api/wards")
 def get_wards():
     """Get all wards with bed availability."""
@@ -921,7 +918,7 @@ def get_wards():
     return query_db(sql)
 
 
-# ---------- Available Options for Forms ----------
+#  Available Options for Forms
 @app.get("/api/available-beds")
 def get_available_beds():
     """Get only available beds for admission form.
@@ -973,9 +970,7 @@ def get_unadmitted_patients():
 
 
 
-# ─────────────────────────────────────────────
 # REPORT ENDPOINTS (Section 9 of Project Doc)
-# ─────────────────────────────────────────────
 
 @app.get("/api/reports/emergency-readiness")
 def report_emergency_readiness():
@@ -1096,9 +1091,9 @@ def report_resource_shortage():
     return query_db(sql)
 
 
-# ─────────────────────────────────────────────
+
 # Serve Frontend Static Files
-# ─────────────────────────────────────────────
+
 static_path = os.path.join(os.path.dirname(__file__), "static")
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
@@ -1125,15 +1120,15 @@ def serve_frontend():
     )
 
 
-# ─────────────────────────────────────────────
+
 # Run Server
-# ─────────────────────────────────────────────
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
-# ─────────────────────────────────────────────
+
 # NOTIFICATIONS (INVENTORY ALERTS)
-# ─────────────────────────────────────────────
+
 
 @app.get("/api/notifications")
 def get_notifications(unread_only: bool = True):
